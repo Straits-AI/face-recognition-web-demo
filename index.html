@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Face Recognition Demo</title>
+  <link rel="stylesheet" href="./styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-content">
+        <h1>
+          <span class="logo">🎯</span>
+          AI Face Recognition
+          <span class="badge">WebGPU</span>
+        </h1>
+        <div class="header-controls">
+          <button id="btnStart" class="btn btn-primary">
+            <span class="btn-icon">📹</span>
+            Start Camera
+          </button>
+          <button id="btnStop" class="btn btn-secondary" style="display:none;">
+            <span class="btn-icon">⏹</span>
+            Stop Camera
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <!-- Camera Section -->
+      <section class="camera-section">
+        <div class="camera-container">
+          <div class="video-wrapper">
+            <video id="video" playsinline muted></video>
+            <canvas id="overlay"></canvas>
+            <div class="camera-overlay-info" id="cameraStatus">
+              Camera not started
+            </div>
+          </div>
+          <div class="camera-controls">
+            <label class="toggle">
+              <input type="checkbox" id="chkDetect" checked />
+              <span class="toggle-slider"></span>
+              Face Detection
+            </label>
+            <select id="selModel" class="model-select">
+              <option value="mobilefacenet">MobileFaceNet</option>
+              <option value="shufflemix_s">ShuffleMixFaceNet-S</option>
+              <option value="adaface_r50">AdaFace R50</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Action Cards -->
+        <div class="action-cards">
+          <!-- Enroll Card -->
+          <div class="action-card">
+            <div class="card-header">
+              <h3>👤 Enroll New Person</h3>
+              <p>Add a new face to the database</p>
+            </div>
+            
+            <!-- Enrollment Mode Selector -->
+            <div class="enroll-mode-selector">
+              <div class="mode-tabs">
+                <button id="btnCameraMode" class="mode-tab active">📹 Live Camera</button>
+                <button id="btnUploadMode" class="mode-tab">📁 Upload Photo</button>
+              </div>
+            </div>
+
+            <div class="card-form">
+              <input id="txtName" type="text" placeholder="Enter person's name" class="form-input">
+              
+              <!-- Camera Mode Controls -->
+              <div id="cameraModeControls" class="mode-controls">
+                <div class="form-row">
+                  <label>Capture frames: <input id="numEnroll" type="number" value="20" min="5" max="50" class="form-input-small"></label>
+                </div>
+                <button id="btnEnroll" class="btn btn-success">
+                  <span class="btn-icon">➕</span>
+                  Enroll Face
+                </button>
+              </div>
+
+              <!-- Upload Mode Controls -->
+              <div id="uploadModeControls" class="mode-controls" style="display: none;">
+                <div class="upload-area" id="uploadArea">
+                  <div class="upload-content">
+                    <span class="upload-icon">📸</span>
+                    <p>Click to select photo or drag & drop</p>
+                    <small>Supports JPG, PNG, WebP</small>
+                  </div>
+                  <input id="fileInput" type="file" accept="image/*" style="display: none;">
+                </div>
+                
+                <div id="uploadPreview" class="upload-preview" style="display: none;">
+                  <img id="previewImg" src="" alt="Preview" class="preview-image">
+                  <div class="preview-info">
+                    <span id="faceCount">Analyzing...</span>
+                  </div>
+                </div>
+                
+                <button id="btnEnrollUpload" class="btn btn-success" style="display: none;">
+                  <span class="btn-icon">➕</span>
+                  Enroll from Photo
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Recognize Card -->
+          <div class="action-card">
+            <div class="card-header">
+              <h3>🔍 Face Recognition</h3>
+              <p>Identify who this person is</p>
+            </div>
+            <div class="card-form">
+              <div class="form-row">
+                <label>Frames: <input id="numVerify" type="number" value="8" min="3" max="30" class="form-input-small"></label>
+                <label>Threshold: <input id="numThr" type="number" value="0.6" step="0.01" min="0" max="1" class="form-input-small"></label>
+              </div>
+              <div class="button-group">
+                <button id="btnIdentify" class="btn btn-primary">
+                  <span class="btn-icon">🎯</span>
+                  Identify Face
+                </button>
+                <button id="btnVerify" class="btn btn-outline">
+                  <span class="btn-icon">✓</span>
+                  Verify Selected
+                </button>
+              </div>
+              <select id="selPerson" class="form-select" style="margin-top: 8px;"></select>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results Section -->
+      <section class="results-section">
+        <div class="results-container">
+          <div class="results-panel">
+            <h3>📊 Results</h3>
+            <div id="metrics" class="metrics-display">
+              <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span id="systemStatus">Initializing...</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Face Preview -->
+          <div class="preview-panel">
+            <h3>🖼 Face Preview</h3>
+            <div class="face-preview">
+              <canvas id="crop" width="112" height="112"></canvas>
+              <div class="preview-info">Last captured face</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Database Section -->
+        <div class="database-section">
+          <div class="database-header">
+            <h3>👥 Enrolled Faces</h3>
+            <div class="database-actions">
+              <button id="btnWarmup" class="btn btn-small">🔥 Warmup Model</button>
+              <button id="btnCompare" class="btn btn-small">⚡ Compare Models</button>
+            </div>
+          </div>
+          <div id="people" class="people-grid"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Advanced Settings (Collapsible) -->
+    <div class="advanced-settings">
+      <button class="settings-toggle" id="settingsToggle">⚙️ Advanced Settings</button>
+      <div class="settings-content" id="settingsContent" style="display: none;">
+        <div class="settings-row">
+          <label class="toggle">
+            <input type="checkbox" id="chkWebGPU" checked />
+            <span class="toggle-slider"></span>
+            Enable WebGPU
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/chunk-loader.js"></script>
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

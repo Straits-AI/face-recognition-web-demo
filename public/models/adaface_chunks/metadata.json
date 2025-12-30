@@ -1,0 +1,63 @@
+{
+  "originalFilename": "adaface_r50.onnx",
+  "totalSize": 174391308,
+  "numChunks": 9,
+  "chunkSize": 20971520,
+  "chunks": [
+    {
+      "index": 0,
+      "filename": "chunk_000.bin",
+      "size": 20971520,
+      "offset": 0
+    },
+    {
+      "index": 1,
+      "filename": "chunk_001.bin",
+      "size": 20971520,
+      "offset": 20971520
+    },
+    {
+      "index": 2,
+      "filename": "chunk_002.bin",
+      "size": 20971520,
+      "offset": 41943040
+    },
+    {
+      "index": 3,
+      "filename": "chunk_003.bin",
+      "size": 20971520,
+      "offset": 62914560
+    },
+    {
+      "index": 4,
+      "filename": "chunk_004.bin",
+      "size": 20971520,
+      "offset": 83886080
+    },
+    {
+      "index": 5,
+      "filename": "chunk_005.bin",
+      "size": 20971520,
+      "offset": 104857600
+    },
+    {
+      "index": 6,
+      "filename": "chunk_006.bin",
+      "size": 20971520,
+      "offset": 125829120
+    },
+    {
+      "index": 7,
+      "filename": "chunk_007.bin",
+      "size": 20971520,
+      "offset": 146800640
+    },
+    {
+      "index": 8,
+      "filename": "chunk_008.bin",
+      "size": 6619148,
+      "offset": 167772160
+    }
+  ],
+  "checksum": "4e546a"
+}

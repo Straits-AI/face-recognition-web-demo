@@ -1,0 +1,37 @@
+{
+  "name": "ai-face-recognition-demo",
+  "version": "1.0.0",
+  "description": "AI-powered face recognition demo using WebGPU, ONNX Runtime, and MediaPipe",
+  "main": "worker.js",
+  "scripts": {
+    "dev": "wrangler dev --local",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler preview",
+    "build": "echo 'No build step required - serving static files'",
+    "serve": "python3 -m http.server 8080",
+    "chunk-model": "node scripts/chunk-model.js",
+    "deploy-chunked": "mv public/models/adaface_r50.onnx ~/adaface_r50.onnx.backup && npm run deploy && mv ~/adaface_r50.onnx.backup public/models/adaface_r50.onnx"
+  },
+  "keywords": [
+    "face-recognition",
+    "webgpu",
+    "onnx",
+    "mediapipe",
+    "ai",
+    "computer-vision",
+    "cloudflare-workers"
+  ],
+  "author": "AI Face Recognition Demo",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/kv-asset-handler": "^0.3.0",
+    "wrangler": "^3.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-username/ai-face-recognition-demo.git"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

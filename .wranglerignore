@@ -1,0 +1,5 @@
+public/models/adaface_r50.onnx
+node_modules/
+.git/
+.DS_Store
+*.log

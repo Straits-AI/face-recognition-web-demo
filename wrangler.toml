@@ -1,0 +1,13 @@
+name = "ai-face-recognition-demo"
+main = "worker.js"
+compatibility_date = "2025-01-01"
+
+# Assets configuration for static files
+[assets]
+directory = "."
+# Note: Large model files (>25MB) must be hosted separately
+# AdaFace model (166MB) exceeds Cloudflare Workers limits
+
+# Limits (optional)
+[limits]
+cpu_ms = 30000
